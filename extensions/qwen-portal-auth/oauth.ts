@@ -8,6 +8,8 @@ const QWEN_OAUTH_CLIENT_ID = "f0304373b74a44d2b584a3fb70ca9e56";
 const QWEN_OAUTH_SCOPE = "openid profile email model.completion";
 const QWEN_OAUTH_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code";
 
+const EXPIRES_BUFFER_MS = 5 * 60 * 1000;
+
 export type QwenDeviceAuthorization = {
   device_code: string;
   user_code: string;
@@ -120,7 +122,7 @@ async function pollDeviceToken(params: {
     token: {
       access: tokenPayload.access_token,
       refresh: tokenPayload.refresh_token,
-      expires: Date.now() + tokenPayload.expires_in * 1000,
+      expires: Date.now() + tokenPayload.expires_in * 1000 - EXPIRES_BUFFER_MS,
       resourceUrl: tokenPayload.resource_url,
     },
   };

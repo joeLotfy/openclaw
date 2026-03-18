@@ -5,6 +5,8 @@ const QWEN_OAUTH_BASE_URL = "https://chat.qwen.ai";
 const QWEN_OAUTH_TOKEN_ENDPOINT = `${QWEN_OAUTH_BASE_URL}/api/v1/oauth2/token`;
 const QWEN_OAUTH_CLIENT_ID = "f0304373b74a44d2b584a3fb70ca9e56";
 
+const EXPIRES_BUFFER_MS = 5 * 60 * 1000;
+
 export async function refreshQwenPortalCredentials(
   credentials: OAuthCredentials,
 ): Promise<OAuthCredentials> {
@@ -57,6 +59,6 @@ export async function refreshQwenPortalCredentials(
     access: accessToken,
     // RFC 6749 section 6: new refresh token is optional; if present, replace old.
     refresh: newRefreshToken || refreshToken,
-    expires: Date.now() + expiresIn * 1000,
+    expires: Date.now() + expiresIn * 1000 - EXPIRES_BUFFER_MS,
   };
 }
